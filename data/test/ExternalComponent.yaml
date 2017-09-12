@@ -1,0 +1,13 @@
+---
+type: ExternalComponent
+name: Test Partner
+description: An external communication partner
+version: V0.1.0
+state: defined
+network: "/public"
+ipv4:
+  - 0.0.0.0/0
+requirements:
+  - component:  /Test-VNF/Test Tenant/Test Cluster
+    capability: ssh
+capabilities: []

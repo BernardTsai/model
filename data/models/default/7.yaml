@@ -1,0 +1,202 @@
+---
+model:
+  type:        Model
+  context:     default
+  version:     7
+  consistent:  True
+  # ----------------------------------------------------------------------------
+  networks:
+  - uuid:    /Test Network
+    type:    ExternalNetwork
+    name:    Test Network
+    version: V0.1.0
+    state:   defined
+    target:  65412:12
+    description: |
+      An external test network
+    ipv4:
+        cidr:      192.168.178.0/24
+        network:   192.168.178.0
+        length:    24
+        gateway:   192.168.178.1
+        dns:       192.168.178.2
+        dhcp:      192.168.178.3
+        start:     192.168.178.128
+        end:       192.168.178.253
+        broadcast: 192.168.178.254
+    ipv6:
+        cidr:      "fd00::/8"
+        network:   "fd00::"
+        length:    8
+        gateway:   "fd00::01"
+        dns:       "fd00::02"
+        dhcp:      "fd00::03"
+        start:     "fd00::80"
+        end:       "fd00::fd"
+        broadcast: "fd00::ff"
+  # ----------------------------------------------------------------------------
+  components:
+  - uuid:         /Test Partner
+    type:         ExternalComponent
+    name:         Test Partner
+    version:      V0.1.0
+    state:        defined
+    network:      /Test Network
+    description: |
+      An external communication partner
+    ipv4:
+    - 0.0.0.0/0
+    ipv6:         []
+    requirements:
+    - component:  /Test-VNF/Test Tenant/Test Cluster
+      capability: ssh
+    capabilities: []
+  # ----------------------------------------------------------------------------
+  vnfs:
+  - uuid:    /Test-VNF
+    type:    VNF
+    name:    Test-VNF
+    version: V0.1.0
+    state:   defined
+    vendor:  Bernard Tsai
+    description: |
+      A test virtualized network function
+    # --------------------------------------------------------------------------
+    tenants:
+    - uuid:       /Test-VNF/Test Tenant
+      type:       Tenant
+      name:       Test Tenant
+      version:    V0.1.0
+      state:      defined
+      vnf:        Test-VNF
+      datacenter: Budapest
+      description: |
+        A test tenant of the test virtualized network function
+      # ------------------------------------------------------------------------
+      networks:
+      - uuid:    /Test-VNF/Test Tenant/Test Network
+        type:    InternalNetwork
+        name:    Test Network
+        version: V0.1.0
+        state:   defined
+        vnf:     Test-VNF
+        tenant:  Test Tenant
+        description: |
+          An internal test network
+        ipv4:
+            cidr:      192.168.178.0/24
+            network:   192.168.178.0
+            length:    24
+            gateway:   192.168.178.1
+            dns:       192.168.178.2
+            dhcp:      192.168.178.3
+            start:     192.168.178.128
+            end:       192.168.178.253
+            broadcast: 192.168.178.254
+        ipv6:
+            cidr:      "fd00::/8"
+            network:   "fd00::"
+            length:    8
+            gateway:   "fd00::01"
+            dns:       "fd00::02"
+            dhcp:      "fd00::03"
+            start:     "fd00::80"
+            end:       "fd00::fd"
+            broadcast: "fd00::ff"
+      # ------------------------------------------------------------------------
+      components:
+      - uuid:         /Test-VNF/Test Tenant/Test Cluster
+        type:         InternalComponent
+        name:         Test Cluster
+        version:      V0.1.0
+        state:        defined
+        vnf:          Test-VNF
+        tenant:       Test Tenant
+        placement:    EXT
+        flavor:       m1.medium
+        image:        Ubuntu-14.04
+        minimum_size: 3
+        maximum_size: 3
+        default_size: 3
+        description: |
+          A test cluster within the test tenant
+        user_data:
+        - ABC
+        metadata:
+        - XYZ
+        volumes:
+        - device: /dev/vdb
+          size:   100
+          type:   ext4
+          mount:  /data
+        interfaces:
+        - network: /Test Network
+          ipv4_fixed:
+          - 192.168.178.10
+          - 192.168.178.11
+          ipv4_allowed: []
+          ipv6_fixed:   []
+          ipv6_allowed: []
+          rules:
+          - direction: ingress
+            mode:      cidr
+            group:     /Test Partner
+            protocol:  TCP
+            port_min:  22
+            port_max:  22
+            family:    IPv4
+            prefix:    0.0.0.0/0
+        requirements: []
+        capabilities:
+        - name: ssh
+          endpoints:
+          - protocol: TCP
+            port_min: 22
+            port_max: 22
+        # ----------------------------------------------------------------------
+        nodes:
+        - uuid:         /Test-VNF/Test Tenant/Test Cluster[13]
+          type:         Node
+          name:         13
+          version:      V0.1.0
+          state:        defined
+          vnf:          Test-VNF
+          tenant:       Test Tenant
+          placement:    EXT
+          flavor:       m1.medium
+          image:        Ubuntu-14.04
+          description: |
+            A test cluster within the test tenant
+          user_data:
+          - ABC
+          metadata:
+          - XYZ
+          volumes:
+          - device: /dev/vdb
+            size:   100
+            type:   ext4
+            mount:  /data
+          interfaces:
+          - network: /Test Network
+            ipv4_fixed:
+            - 192.168.178.10
+            - 192.168.178.11
+            ipv4_allowed: []
+            ipv6_fixed:   []
+            ipv6_allowed: []
+            rules:
+            - direction: ingress
+              mode:      cidr
+              group:     /Test Partner
+              protocol:  TCP
+              port_min:  22
+              port_max:  22
+              family:    IPv4
+              prefix:    0.0.0.0/0
+          requirements: []
+          capabilities:
+          - name: ssh
+            endpoints:
+            - protocol: TCP
+              port_min: 22
+              port_max: 22

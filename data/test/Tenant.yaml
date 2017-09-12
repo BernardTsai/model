@@ -1,0 +1,8 @@
+---
+type:        Tenant
+name:        SiteA
+description: A test tenant of the test virtualized network function
+version:     V0.1.0
+vnf:         Test
+datacenter:  SiteA
+state:       defined

@@ -1,0 +1,34 @@
+---
+type:         InternalComponent
+name:         Cluster
+description:  A test cluster within the test tenant
+version:      V0.1.0
+state:        defined
+vnf:          Test
+tenant:       SiteA
+placement:    EXT
+flavor:       m1.medium
+image:        Ubuntu-14.04
+minimum_size: 3
+maximum_size: 5
+default_size: 3
+user_data:    ["ABC"]
+metadata:     ["XYZ"]
+volumes:
+  - device: "/dev/vdb"
+    size:   100
+    type:   ext4
+    mount:  "/data"
+interfaces:
+  - network: "/public"
+    ipv4_fixed:
+      - 192.168.178.10
+      - 192.168.178.11
+requirements: []
+capabilities:
+  - name:    ssh
+    network: /public
+    endpoints:
+      - protocol: TCP
+        port_min: 22
+        port_max: 22

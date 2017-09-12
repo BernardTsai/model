@@ -1,0 +1,108 @@
+---
+"$schema": http://json-schema.org/draft-06/schema#
+title: InternalNetwork
+description: A virtual network
+type: object
+properties:
+  type:
+    enum:
+    - InternalNetwork
+  name:
+    type: string
+    minLength: 4
+    maxLength: 256
+  description:
+    type: string
+    maxLength: 2048
+  state:
+    enum:
+    - undefined
+    - defined
+    - inactive
+    - active
+    - failure
+    - defining
+    - undefining
+    - installing
+    - uninstalling
+    - starting
+    - stopping
+    - configuring
+    - reconfiguring
+    - removing
+  version:
+    type: string
+    pattern: "^V(\\d+)\\.(\\d+)\\.(\\d+)$"
+  vnf:
+    type: string
+    minLength: 4
+    maxLength: 256
+  tenant:
+    type: string
+    minLength: 4
+    maxLength: 256
+  ipv4:
+    type: object
+    properties:
+      cidr:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\\/(?:[0-9]|[1-2][0-9]|3[0-2]))$"
+      network:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      length:
+        type: integer
+        minimum: 0
+        maximum: 32
+      gateway:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      dns:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      dhcp:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      broadcast:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      start:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      end:
+        type: string
+        pattern: "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+    required:
+    - cidr
+  ipv6:
+    type: object
+    properties:
+      cidr:
+        type: string
+      network:
+        type: string
+      length:
+        type: integer
+        minimum: 0
+        maximum: 128
+      gateway:
+        type: string
+      dns:
+        type: string
+      dhcp:
+        type: string
+      broadcast:
+        type: string
+      start:
+        type: string
+      end:
+        type: string
+    required:
+    - cidr
+required:
+- type
+- name
+- state
+- version
+- vnf
+- tenant

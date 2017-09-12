@@ -1,0 +1,7 @@
+---
+type:        VNF
+name:        Test
+description: A test virtualized network function
+version:     V0.1.0
+vendor:      Bernard Tsai
+state:       defined

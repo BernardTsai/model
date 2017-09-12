@@ -1,0 +1,149 @@
+---
+"$schema": http://json-schema.org/draft-06/schema#
+title: Node
+description: A single compute node
+type: object
+properties:
+  type:
+    enum:
+    - Node
+  name:
+    type: integer
+    minimum: 0
+  description:
+    type: string
+    maxLength: 2048
+  state:
+    enum:
+    - undefined
+    - defined
+    - inactive
+    - active
+    - failure
+    - defining
+    - undefining
+    - installing
+    - uninstalling
+    - starting
+    - stopping
+    - configuring
+    - reconfiguring
+    - removing
+  version:
+    type: string
+    pattern: "^V(\\d+)\\.(\\d+)\\.(\\d+)"
+  component:
+    type: string
+    minLength: 4
+    maxLength: 256
+  placement:
+    type: string
+    enum:
+    - EXT
+    - INT
+    - MGMT
+  flavor:
+    type: string
+  image:
+    type: string
+  user_data:
+    type: array
+    items:
+      type: string
+  metadata:
+    type: array
+    items:
+      type: string
+  volumes:
+    type: array
+    items:
+      type: object
+      properties:
+        device:
+          type: string
+        size:
+          type: integer
+          minimum: 1
+        type:
+          type: string
+        mount:
+          type: string
+  interfaces:
+    type: array
+    items:
+      type: object
+      properties:
+        network:
+          type: string
+        type:
+          enum:
+          - mgmt
+          - left
+          - right
+          minimum: 1
+        ipv4_fixed:
+          type: array
+          items:
+            type: string
+        ipv4_allowed:
+          type: array
+          items:
+            type: string
+        ipv6_fixed:
+          type: array
+          items:
+            type: string
+        ipv6_allowed:
+          type: array
+          items:
+            type: string
+  requirements:
+    type: array
+    items:
+      type: object
+      properties:
+        cluster:
+          type: string
+        capability:
+          type: string
+        interface:
+          type: string
+      required:
+      - cluster
+      - capability
+      - interface
+  capabilities:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        interface:
+          type: string
+        endpoints:
+          type: array
+          items:
+            "$ref": "#/definitions/endpoint"
+          definitions:
+            endpoints:
+              protocol:
+                enum:
+                - TCP
+                - UDP
+              range:
+                type: string
+      required:
+      - cluster
+      - capability
+      - interface
+required:
+- type
+- name
+- state
+- version
+- tenant
+- component
+- placement
+- flavor
+- image

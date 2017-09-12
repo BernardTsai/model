@@ -1,0 +1,260 @@
+---
+model:
+  type:        Model
+  context:     test
+  version:     6
+  consistent:  False
+  # ----------------------------------------------------------------------------
+  networks:
+  - uuid:    /public
+    type:    ExternalNetwork
+    name:    public
+    version: V0.1.0
+    state:   defined
+    target:  65412:12
+    description: |
+      An external test network
+    ipv4:
+        cidr:      192.168.178.0/24
+        network:   192.168.178.0
+        length:    24
+        gateway:   192.168.178.1
+        dns:       192.168.178.2
+        dhcp:      192.168.178.3
+        start:     192.168.178.128
+        end:       192.168.178.253
+        broadcast: 192.168.178.254
+    ipv6:
+        cidr:      "fd00::/8"
+        network:   "fd00::"
+        length:    8
+        gateway:   "fd00::01"
+        dns:       "fd00::02"
+        dhcp:      "fd00::03"
+        start:     "fd00::80"
+        end:       "fd00::fd"
+        broadcast: "fd00::ff"
+  # ----------------------------------------------------------------------------
+  components:
+  - uuid:         /Test Partner
+    type:         ExternalComponent
+    name:         Test Partner
+    version:      V0.1.0
+    state:        defined
+    network:      /public
+    description: |
+      An external communication partner
+    ipv4:
+    - 0.0.0.0/0
+    ipv6:         []
+    requirements:
+    - component:  /Test-VNF/Test Tenant/Test Cluster
+      capability: ssh
+    capabilities: []
+  # ----------------------------------------------------------------------------
+  vnfs:
+  - uuid:    /Test
+    type:    VNF
+    name:    Test
+    version: V0.1.0
+    state:   defined
+    vendor:  Bernard Tsai
+    description: |
+      A test virtualized network function
+    # --------------------------------------------------------------------------
+    tenants:
+    - uuid:       /Test/SiteA
+      type:       Tenant
+      name:       SiteA
+      version:    V0.1.0
+      state:      defined
+      vnf:        Test
+      datacenter: SiteA
+      description: |
+        A test tenant of the test virtualized network function
+        # ------------------------------------------------------------------------
+      networks:
+      - uuid:    /Test/SiteA/oam
+        type:    InternalNetwork
+        name:    oam
+        version: V0.1.0
+        state:   defined
+        vnf:     Test
+        tenant:  SiteA
+        description: |
+          An internal test network
+        ipv4:
+            cidr:      192.168.178.0/24
+            network:   192.168.178.0
+            length:    24
+            gateway:   192.168.178.1
+            dns:       192.168.178.2
+            dhcp:      192.168.178.3
+            start:     192.168.178.128
+            end:       192.168.178.253
+            broadcast: 192.168.178.254
+        ipv6:
+            cidr:      "fd00::/8"
+            network:   "fd00::"
+            length:    8
+            gateway:   "fd00::01"
+            dns:       "fd00::02"
+            dhcp:      "fd00::03"
+            start:     "fd00::80"
+            end:       "fd00::fd"
+            broadcast: "fd00::ff"
+      # ------------------------------------------------------------------------
+      components:
+      - uuid:         /Test/SiteA/Cluster
+        type:         InternalComponent
+        name:         Cluster
+        version:      V0.1.0
+        state:        defined
+        vnf:          Test
+        tenant:       SiteA
+        placement:    EXT
+        flavor:       m1.medium
+        image:        Ubuntu-14.04
+        minimum_size: 3
+        maximum_size: 5
+        default_size: 3
+        description: |
+          A test cluster within the test tenant
+        user_data:
+        - ABC
+        metadata:
+        - XYZ
+        volumes:
+        - device: /dev/vdb
+          size:   100
+          type:   ext4
+          mount:  /data
+        interfaces:
+        - network: /public
+          ipv4_fixed:
+          - 192.168.178.10
+          - 192.168.178.11
+          ipv4_allowed: []
+          ipv6_fixed:   []
+          ipv6_allowed: []
+          rules: []
+        requirements: []
+        capabilities:
+        - name: ssh
+          endpoints:
+          - protocol: TCP
+            port_min: 22
+            port_max: 22
+        # ----------------------------------------------------------------------
+        nodes:
+        - uuid:         /Test/SiteA/Cluster[0]
+          type:         Node
+          name:         0
+          version:      V0.1.0
+          state:        defined
+          vnf:          Test
+          tenant:       SiteA
+          placement:    EXT
+          flavor:       m1.medium
+          image:        Ubuntu-14.04
+          description: |
+            A test cluster within the test tenant
+          user_data:
+          - ABC
+          metadata:
+          - XYZ
+          volumes:
+          - device: /dev/vdb
+            size:   100
+            type:   ext4
+            mount:  /data
+          interfaces:
+          - network: /public
+            ipv4_fixed:
+            - 192.168.178.10
+            - 192.168.178.11
+            ipv4_allowed: []
+            ipv6_fixed:   []
+            ipv6_allowed: []
+            rules: []
+          requirements: []
+          capabilities:
+          - name: ssh
+            endpoints:
+            - protocol: TCP
+              port_min: 22
+              port_max: 22
+        - uuid:         /Test/SiteA/Cluster[1]
+          type:         Node
+          name:         1
+          version:      V0.1.0
+          state:        defined
+          vnf:          Test
+          tenant:       SiteA
+          placement:    EXT
+          flavor:       m1.medium
+          image:        Ubuntu-14.04
+          description: |
+            A test cluster within the test tenant
+          user_data:
+          - ABC
+          metadata:
+          - XYZ
+          volumes:
+          - device: /dev/vdb
+            size:   100
+            type:   ext4
+            mount:  /data
+          interfaces:
+          - network: /public
+            ipv4_fixed:
+            - 192.168.178.10
+            - 192.168.178.11
+            ipv4_allowed: []
+            ipv6_fixed:   []
+            ipv6_allowed: []
+            rules: []
+          requirements: []
+          capabilities:
+          - name: ssh
+            endpoints:
+            - protocol: TCP
+              port_min: 22
+              port_max: 22
+        - uuid:         /Test/SiteA/Cluster[2]
+          type:         Node
+          name:         2
+          version:      V0.1.0
+          state:        defined
+          vnf:          Test
+          tenant:       SiteA
+          placement:    EXT
+          flavor:       m1.medium
+          image:        Ubuntu-14.04
+          description: |
+            A test cluster within the test tenant
+          user_data:
+          - ABC
+          metadata:
+          - XYZ
+          volumes:
+          - device: /dev/vdb
+            size:   100
+            type:   ext4
+            mount:  /data
+          interfaces:
+          - network: /public
+            ipv4_fixed:
+            - 192.168.178.10
+            - 192.168.178.11
+            ipv4_allowed: []
+            ipv6_fixed:   []
+            ipv6_allowed: []
+            rules: []
+          requirements: []
+          capabilities:
+          - name: ssh
+            endpoints:
+            - protocol: TCP
+              port_min: 22
+              port_max: 22

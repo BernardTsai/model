@@ -1,0 +1,68 @@
+---
+"$schema": http://json-schema.org/draft-06/schema#
+title: ExternalComponent
+description: An external communication partner
+type: object
+properties:
+  type:
+    enum:
+    - ExternalComponent
+  name:
+    type: string
+    minLength: 4
+    maxLength: 256
+  description:
+    type: string
+    maxLength: 2048
+  network:
+    type: string
+  ipv4:
+    type: array
+    items:
+      type: string
+  ipv6:
+    type: array
+    items:
+      type: string
+  requirements:
+    type: array
+    items:
+      type: object
+      properties:
+        component:
+          type: string
+        capability:
+          type: string
+      required:
+      - component
+      - capability
+  capabilities:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        endpoints:
+          type: array
+          items:
+            type: object
+            properties:
+              protocol:
+                enum:
+                - TCP
+                - UDP
+              port_min:
+                type: integer
+              port_max:
+                type: integer
+            required:
+            - protocol
+            - port_min
+            - port_max
+      required:
+      - name
+      - endpoints
+required:
+- type
+- name

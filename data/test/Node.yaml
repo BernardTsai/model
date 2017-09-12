@@ -1,0 +1,26 @@
+---
+type:        Node
+name:        1
+description: A test cluster within the test tenant
+version:     V0.1.0
+state:       defined
+vnf:         Test
+tenant:      SiteA
+component:   Cluster
+placement:   EXT
+flavor:      m1.medium
+image:       Ubuntu-14.04
+user_data:   ["ABCD"]
+metadata:    ["XYZ"]
+volumes:
+  - device: "/dev/vdb"
+    size:   100
+    type:   ext4
+    mount:  "/data"
+interfaces:
+  - network: eth0
+    ipv4_fixed:
+      - 192.168.178.10
+      - 192.168.178.11
+requirements: []
+capabilities: []
