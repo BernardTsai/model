@@ -68,6 +68,11 @@ properties:
           type: string
         mount:
           type: string
+      required:
+        - device
+        - size
+        - type
+        - mount
   interfaces:
     type: array
     items:
@@ -97,6 +102,8 @@ properties:
           type: array
           items:
             type: string
+      required:
+        - network
   requirements:
     type: array
     items:
@@ -124,9 +131,8 @@ properties:
         endpoints:
           type: array
           items:
-            "$ref": "#/definitions/endpoint"
-          definitions:
-            endpoints:
+            type: object
+            properties:
               protocol:
                 enum:
                 - TCP

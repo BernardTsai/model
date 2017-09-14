@@ -13,6 +13,7 @@ import yaml
 import glob
 import os
 import jsonschema
+import traceback
 
 # ------------------------------------------------------------------------------
 #
@@ -41,7 +42,7 @@ class Validate():
 
             # check type
             if not data["type"] in Validate.schemas:
-                messages.append( "Unknown type" )
+                messages.append( "Unknown type: " + data["type"] )
             else:
                 # load schema
                 schema_name = data["type"]
@@ -50,8 +51,21 @@ class Validate():
                 # validate
                 v = jsonschema.Draft4Validator( schema )
                 for error in v.iter_errors(data):
-                    messages.append( error.message )
+                    path = ""
+                    for entry in error.absolute_path:
+                        if isinstance( entry, int ):
+                            path = path + "[" + str(entry) + "]"
+                        else:
+                            path = path + "/" + str(entry)
+                    print(error.absolute_path )
+                    print( "-" + path + "-")
+                    if path == "":
+                        path="/"
+
+                    messages.append( path  + " <br/>")
+                    messages.append( error.message + " <br/>")
         except Exception as e:
-            messages.append( e.message )
+            traceback.print_exc()
+            messages.append( e )
 
         return messages

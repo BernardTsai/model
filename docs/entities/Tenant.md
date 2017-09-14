@@ -24,12 +24,12 @@ General Properties
 | Property        | Description                                     |
 |-----------------|-------------------------------------------------|
 | **type**        | Tenant                                          |
-| **name**        | unique identifier (8-256 characters)            |
+| **name**        | unique identifier (4-256 characters)            |
 | description     | short description (max 2048 characters)         |
 | **state**       | undefined, defined, inactive, active, failure   |
 | **version**     | semantic version Vx.y.z                         |
-| **vnf**         | name of VNF (8-256 characters)                  |
-| **datacenter**  | name of the data center (8-256 characters)      |
+| **vnf**         | name of VNF (4-256 characters)                  |
+| **datacenter**  | name of the data center (4-256 characters)      |
 
 _required properties are marked in bold_
 
@@ -37,7 +37,7 @@ Remarks
 -------
 
 - **uuid**: `[VNF name]_[Tenant name]`
-- **name**: a unique name within the VNF context for each tenant merely consisting of alphabetical characters and possibly digits with a length between 8 and 256 characters
+- **name**: a unique name within the VNF context for each tenant merely consisting of alphabetical characters and possibly digits with a length between 4 and 256 characters
 - **datacenter**: the name of the datacenter needs to match a name defined
 in the list of available datacenters. This list is subject to change.
 

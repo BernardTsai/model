@@ -6,9 +6,9 @@ model:
   consistent:  False
   # ----------------------------------------------------------------------------
   networks:
-  - uuid:    /public
+  - uuid:    /Public
     type:    ExternalNetwork
-    name:    public
+    name:    Public
     version: V0.1.0
     state:   defined
     target:  65412:12
@@ -36,12 +36,12 @@ model:
         broadcast: "fd00::ff"
   # ----------------------------------------------------------------------------
   components:
-  - uuid:         /Test Partner
+  - uuid:         /Partner
     type:         ExternalComponent
-    name:         Test Partner
+    name:         Partner
     version:      V0.1.0
     state:        defined
-    network:      /public
+    network:      /Public
     description: |
       An external communication partner
     ipv4:
@@ -74,9 +74,9 @@ model:
         A test tenant of the test virtualized network function
         # ------------------------------------------------------------------------
       networks:
-      - uuid:    /Test/SiteA/oam
+      - uuid:    /Test/SiteA/OAM
         type:    InternalNetwork
-        name:    oam
+        name:    OAM
         version: V0.1.0
         state:   defined
         vnf:     Test
@@ -130,7 +130,7 @@ model:
           type:   ext4
           mount:  /data
         interfaces:
-        - network: /public
+        - network: /Public
           ipv4_fixed:
           - 192.168.178.10
           - 192.168.178.11
@@ -169,7 +169,7 @@ model:
             type:   ext4
             mount:  /data
           interfaces:
-          - network: /public
+          - network: /Public
             ipv4_fixed:
             - 192.168.178.10
             - 192.168.178.11
@@ -206,7 +206,7 @@ model:
             type:   ext4
             mount:  /data
           interfaces:
-          - network: eth0
+          - network: /Public
             ipv4_fixed:
             - 192.168.178.10
             - 192.168.178.11
@@ -215,7 +215,12 @@ model:
             ipv6_allowed: []
             rules: []
           requirements: []
-          capabilities: []
+          capabilities:
+          - name: ssh
+            endpoints:
+            - protocol: TCP
+              port_min: 22
+              port_max: 22
         - uuid:         /Test/SiteA/Cluster[2]
           type:         Node
           name:         2
@@ -238,7 +243,7 @@ model:
             type:   ext4
             mount:  /data
           interfaces:
-          - network: /public
+          - network: /Public
             ipv4_fixed:
             - 192.168.178.10
             - 192.168.178.11

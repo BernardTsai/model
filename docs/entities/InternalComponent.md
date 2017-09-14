@@ -41,12 +41,12 @@ General Properties
 | Property           | Description                                     |
 |--------------------|-------------------------------------------------|
 | **type**           | InternalComponent                               |
-| **name**           | unique identifier (8-256 characters)            |
+| **name**           | unique identifier (4-256 characters)            |
 | description        | short description (max 2048 characters)         |
 | **state**          | undefined, defined, inactive, active, failure   |
 | **version**        | semantic version Vx.y.z                         |
-| **vnf**            | name of VNF (8-256 characters)                  |
-| **tenant**         | name of tenant (8-256 characters)               |
+| **vnf**            | name of VNF (4-256 characters)                  |
+| **tenant**         | name of tenant (4-256 characters)               |
 | **placement**      | EXT, INT or MGMT                                |
 | **flavor**         | sizing of the compute nodes (string)            |
 | **image**          | name of the OS image (string)                   |
@@ -125,7 +125,7 @@ Remarks
 -------
 
 - **uuid**: `[VNF name]_[Tenant name]_[Component name]`
-- **name**: a unique name within tenant context merely consisting of alphabetical characters and possibly digits with a length between 8 and 256 characters
+- **name**: a unique name within tenant context merely consisting of alphabetical characters and possibly digits with a length between 4 and 256 characters
 
 
 Example

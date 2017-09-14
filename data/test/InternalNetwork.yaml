@@ -1,6 +1,6 @@
 ---
 type:        InternalNetwork
-name:        oam
+name:        OAM
 description: An internal test network
 vnf:         Test
 tenant:      SiteA

@@ -6,9 +6,9 @@ model:
   consistent:  False
   # ----------------------------------------------------------------------------
   networks:
-  - uuid:    /public
+  - uuid:    /Public
     type:    ExternalNetwork
-    name:    public
+    name:    Public
     version: V0.1.0
     state:   defined
     target:  65412:12
@@ -36,12 +36,12 @@ model:
         broadcast: "fd00::ff"
   # ----------------------------------------------------------------------------
   components:
-  - uuid:         /Test Partner
+  - uuid:         /Partner
     type:         ExternalComponent
-    name:         Test Partner
+    name:         Partner
     version:      V0.1.0
     state:        defined
-    network:      /public
+    network:      /Public
     description: |
       An external communication partner
     ipv4:

@@ -1,10 +1,11 @@
 ---
-type:        ExternalNetwork
-name:        Public
-description: An external test network
+type:        InternalNetwork
+name:        oam
+description: An internal test network
+vnf:         Test
+tenant:      SiteA
 version:     V0.1.0
 state:       defined
-target:      "65412:12"
 ipv4:
   cidr:      "192.168.178.0/24"
   network:   "192.168.178.0"

@@ -21,11 +21,11 @@ General Properties
 | Property        | Description                                     |
 |-----------------|-------------------------------------------------|
 | **type**        | VNF                                             |
-| **name**        | unique identifier (8-256 characters)            |
+| **name**        | unique identifier (4-256 characters)            |
 | description     | short description (max 2048 characters)         |
 | **state**       | undefined, defined, inactive, active, failure   |
 | **version**     | semantic version Vx.y.z                         |
-| **vendor**      | name of vendor (8-256 characters)               |
+| **vendor**      | name of vendor (4-256 characters)               |
 
 _required properties are marked in bold_
 

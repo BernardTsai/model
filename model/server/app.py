@@ -15,19 +15,21 @@
 from flask       import Flask, request, redirect
 from yaml        import safe_dump
 from json        import dumps
-from model.cli.validator import Validator
+from yaml        import safe_load
+
+from model.core.validate import Validate
 
 app = Flask(__name__, static_url_path='/static')
-
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 # ------------------------------------------------------------------------------
 #
 # index: entry page
 #
 # ------------------------------------------------------------------------------
-@app.route('/static')
+@app.route('/')
 def index():
-    return app.send_static_file('html/index.html')
-    # return redirect("../../static/html/index.html", code=302)
+    #return app.send_static_file('html/index.html')
+    return redirect("static/html/index.html", code=302)
 
 # ------------------------------------------------------------------------------
 #
@@ -45,8 +47,7 @@ def version():
 # ------------------------------------------------------------------------------
 @app.route('/api/v0.1.0/set', methods=['POST'])
 def set():
-    vnf  = request.form['vnf']
-    data = request.form['data']
+    descriptor = request.form['descriptor']
 
     # validate data schema
     # load vnf
@@ -56,12 +57,15 @@ def set():
     # save vnf & actions
     # render result
 
-    validator = Validator()
-    validator.validate( data )
+    validator = Validate()
+    validator.version = "V0.0.1"
+
+    data = safe_load( descriptor )
+    messages = validator.validate( data )
 
     result = ""
-    for msg in validator.messages:
-        result = result + msg + "\n"
+    for msg in messages:
+        result = result + str(msg) + "\n"
 
     return result
 

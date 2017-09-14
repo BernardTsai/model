@@ -1,6 +1,6 @@
 ---
 type:        ExternalNetwork
-name:        Public
+name:        public
 description: An external test network
 version:     V0.1.0
 state:       defined

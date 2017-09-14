@@ -6,9 +6,9 @@ model:
   consistent:  True
   # ----------------------------------------------------------------------------
   networks:
-  - uuid:    /public
+  - uuid:    /Public
     type:    ExternalNetwork
-    name:    public
+    name:    Public
     version: V0.1.0
     state:   defined
     target:  65412:12

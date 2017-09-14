@@ -25,7 +25,7 @@ General Properties
 | Property         | Description                                     |
 |------------------|-------------------------------------------------|
 | **type**         | InternalComponent                               |
-| **name**         | unique identifier (8-256 characters)            |
+| **name**         | unique identifier (4-256 characters)            |
 | description      | short description (max 2048 characters)         |
 | **state**        | undefined, defined, inactive, active, failure   |
 | **version**      | semantic version Vx.y.z                         |

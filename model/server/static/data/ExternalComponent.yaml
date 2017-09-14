@@ -1,10 +1,10 @@
 ---
 type: ExternalComponent
-name: Partner
+name: Test Partner
 description: An external communication partner
 version: V0.1.0
 state: defined
-network: "/Public"
+network: "/public"
 ipv4:
   - 0.0.0.0/0
 requirements:

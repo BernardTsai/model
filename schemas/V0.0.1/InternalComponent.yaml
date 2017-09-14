@@ -82,6 +82,11 @@ properties:
           type: string
         mount:
           type: string
+      required:
+        - device
+        - size
+        - type
+        - mount
   interfaces:
     type: array
     items:

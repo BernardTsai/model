@@ -18,15 +18,9 @@ volumes:
     type:   ext4
     mount:  "/data"
 interfaces:
-  - network: /Public
+  - network: eth0
     ipv4_fixed:
       - 192.168.178.10
       - 192.168.178.11
 requirements: []
-capabilities:
-  - name:    ssh
-    network: /Public
-    endpoints:
-      - protocol: TCP
-        port_min: 22
-        port_max: 22
+capabilities: []

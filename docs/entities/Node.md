@@ -43,9 +43,9 @@ General Properties
 | description      | short description (max 2048 characters)         |
 | **state**        | undefined, defined, inactive, active, failure   |
 | **version**      | semantic version Vx.y.z                         |
-| **vnf**          | name of VNF (8-256 characters)                  |
-| **tenant**       | name of tenant (8-256 characters)               |
-| **component**    | name of internal component (8-256 characters)   |
+| **vnf**          | name of VNF (4-256 characters)                  |
+| **tenant**       | name of tenant (4-256 characters)               |
+| **component**    | name of internal component (4-256 characters)   |
 | **placement**    | EXT, INT or MGMT                                |
 | **flavor**       | sizing of the compute nodes (string)            |
 | **image**        | name of the OS image (string)                   |
