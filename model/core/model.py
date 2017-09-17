@@ -18,31 +18,50 @@
 #
 # ------------------------------------------------------------------------------
 
-from validate import Validate
-from render   import Render
-from input    import Input
-from output   import Output
-
 # ------------------------------------------------------------------------------
 #
 # Class Model
 #
 # ------------------------------------------------------------------------------
-class Model(Validate,Input,Render,Output):
+class Model():
+
+    supported_schemas = ["V0.0.1"]
 
     # --------------------------------------------------------------------------
-    version = "V0.0.1"
-
-    # --------------------------------------------------------------------------
-    def __init__(self,context="default"):
+    def __init__(self, context="default", schema="V0.0.1", model=None):
         """Initialize model """
 
-        self.model = self._get_default_model(context)
+        # store proivided model
+        if model:
+            # check schema compatability
+            if not model["schema"] in Model.supported_schemas:
+                raise AttributeError( "Unsupported schema" )
+
+            self.model  = model
+            self.schema = schema
+
+        # create new model
+        else:
+            # check schema compatability
+            if not schema in Model.supported_schemas:
+                raise AttributeError( "Unsupported schema" )
+
+            self.model  = self._get_default_model(context,schema)
+            self.schema = schema
+
+    # --------------------------------------------------------------------------
+    def getModel(self):
+        """Provide model object"""
+        return self.model
+
+    # --------------------------------------------------------------------------
+    def getSchema(self):
+        """Provide schema"""
+        return self.schema
 
     # --------------------------------------------------------------------------
     def set(self, data):
-        # validate data structure
-        self.validate( data )
+        """Apply change to model"""
 
         # increment version
         self.model["version"] = self.model["version"] + 1
@@ -427,8 +446,9 @@ class Model(Validate,Input,Render,Output):
         interface["state"] = state
 
     # --------------------------------------------------------------------------
-    def _get_default_model(self,context):
+    def _get_default_model(self,context,schema):
         model = {
+            "schema":      schema,
             "type":        "Model",
             "context":     context,
             "version":     0,

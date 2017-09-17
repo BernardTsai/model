@@ -1,13 +1,14 @@
 ---
-type: ExternalComponent
-name: Partner
+schema:      V0.0.1
+type:        ExternalComponent
+name:        Partner
 description: An external communication partner
-version: V0.1.0
-state: defined
-network: "/Public"
+version:     V0.0.1
+state:       defined
+network:     "/Public"
 ipv4:
   - 0.0.0.0/0
 requirements:
-  - component:  /Test-VNF/Test Tenant/Test Cluster
+  - component:  /Test/SiteA/Cluster
     capability: ssh
 capabilities: []

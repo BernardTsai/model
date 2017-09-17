@@ -8,19 +8,18 @@
 # A class to provide functionality for calculating the difference between models.
 #
 # ------------------------------------------------------------------------------
-
 # TODO:
-# - validate arguments (type, if consistent, ...)
 # - adding networks, components etc. under tenants is not reflected in delta list
+# ------------------------------------------------------------------------------
 
-from render import Render
+import yaml
 
 # ------------------------------------------------------------------------------
 #
 # Class Delta
 #
 # ------------------------------------------------------------------------------
-class Delta(Render):
+class Delta():
 
     # --------------------------------------------------------------------------
     def __init__(self, model1, model2):
@@ -29,9 +28,10 @@ class Delta(Render):
         # save references to models and the diff
         self.model1 = model1
         self.model2 = model2
-        self.tree1  = model1.model
-        self.tree2  = model2.model
-        self.model = {
+        self.tree1  = model1.getModel()
+        self.tree2  = model2.getModel()
+        self.model  = {
+            "schema":     self.model1.getSchema(),
             "context":    self.tree1["context"],
             "version1":   self.tree1["version"],
             "version2":   self.tree2["version"],
@@ -41,8 +41,8 @@ class Delta(Render):
         }
 
         # create indexes for both models
-        self.index1 = self._get_index( self.tree1 )
-        self.index2 = self._get_index( self.tree2 )
+        self.index1 = self._create_index( self.tree1 )
+        self.index2 = self._create_index( self.tree2 )
 
         # difference between external networks
         networks  = self.model["networks"]
@@ -64,11 +64,10 @@ class Delta(Render):
 
         # difference between child elements of VNFs
         for vnf in vnfs:
-            vnf["tenants"] = []
-
-            uuid = vnf["type"] + ":" + vnf["uuid"]
 
             if vnf["action"] == "keep" or vnf["action"] == "change":
+                vnf["tenants"] = []
+
                 uuid = vnf["type"] + ":" + vnf["uuid"]
                 vnf1 = self.index1[uuid]
                 vnf2 = self.index2[uuid]
@@ -102,9 +101,9 @@ class Delta(Render):
 
                         # difference between child elements of tenants
                         for component in components:
-                            component["nodes"] = []
-
                             if component["action"] == "keep" or component["action"] == "change":
+                                component["nodes"] = []
+
                                 uuid       = component["type"] + ":" + component["uuid"]
                                 component1 = self.index1[uuid]
                                 component2 = self.index2[uuid]
@@ -127,10 +126,24 @@ class Delta(Render):
                 tenant["components"] = sorted( tenant["components"], key=self._action)
 
                 for component in tenant["components"]:
-                    component["nodes"]   = sorted( component["nodes"], key=self._action)
+                    component["nodes"] = sorted( component["nodes"], key=self._action)
 
     # --------------------------------------------------------------------------
+    def getModel(self):
+        """Provide model object"""
+        return self.model
 
+    # --------------------------------------------------------------------------
+    def getModel1(self):
+        """Provide first model object"""
+        return self.model1
+
+    # --------------------------------------------------------------------------
+    def getModel2(self):
+        """Provide second model object"""
+        return self.model2
+
+    # --------------------------------------------------------------------------
     def _action(self, item):
         if item["action"] == "remove":
             return 1
@@ -142,7 +155,7 @@ class Delta(Render):
             return 4
 
     # --------------------------------------------------------------------------
-    def _get_index(self, model ):
+    def _create_index(self, model ):
         index = {}
 
         for network in model["networks"]:
@@ -171,7 +184,7 @@ class Delta(Render):
     # --------------------------------------------------------------------------
     def _delta_entities(self, list, list1, list2 ):
 
-        # delta between external networks
+        # delta between two lists of entities
         for item1 in list1:
             type1 = item1["type"]
             uuid1 = item1["uuid"]
@@ -218,10 +231,11 @@ class Delta(Render):
 
         # cascade action to all subelements of a VNF
         if type == "VNF":
+            entity["tenants"] = []
             for tenant in element["tenants"]:
                 subentity = { "type": "Tenant", "uuid": tenant["uuid"], "action": action }
                 entity["tenants"].append( subentity )
-                self._delta_subentities( subentity, component)
+                self._delta_subentities( subentity, tenant)
 
         # cascade action to all subelements of a tenant
         elif type == "Tenant":

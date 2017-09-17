@@ -9,7 +9,7 @@ properties:
     - ExternalComponent
   name:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   description:
     type: string

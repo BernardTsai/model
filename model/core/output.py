@@ -5,7 +5,7 @@
 #
 # output.py:
 #
-# A mixin class to provide functionality for writing data.
+# A class to provide functionality for writing data.
 #
 # ------------------------------------------------------------------------------
 
@@ -22,27 +22,41 @@ import codecs
 class Output():
 
     # --------------------------------------------------------------------------
-    def output(self, txt, directory=""):
+    def __init__(self, directory=None):
+        """Initialize"""
 
-        # check if the view contains special output statement lines:
+        self.directory = directory
+        self.data      = None
+        self.filenames = []
+        self.blocks    = []
+
+    # --------------------------------------------------------------------------
+    def write(self, data):
+        """Write blocks of data to STDOUT or a file"""
+
+        self.data      = data
+        self.filenames = []
+        self.blocks    = []
+
+        # check if the data contains special output statement lines:
         # ">> [path] [comments]\n" which advise to output the following
         # data to a file location indicated by the [path] argument
 
-        block     = ""
-        file_name = ""
-        for line in txt.splitlines():
+        block    = ""
+        filename = ""
+        for line in self.data.splitlines():
             # determine new filename: ">> [filename] [comments]"
             match = re.match(">> ([^ ]*)(.*)", line)
             if match:
                 # write the existing block
                 if block != "":
-                    self._output_block(directory, file_name, block)
+                    self.write2(filename, block)
 
                     # reset block and file name
                     block = ""
 
                 # set new file name
-                file_name = match.group(1)
+                filename = match.group(1)
             else:
                 if block == "":
                     block = line
@@ -50,33 +64,49 @@ class Output():
                     block += "\n" + line
 
         # write last block
-        self._output_block(directory, file_name, block)
+        self.write2(filename, block)
 
     # --------------------------------------------------------------------------
-    def _output_block(self, directory, file_name, block):
-        try:
-            # write to stdout if no proper output file can be determined
-            if (directory == "") or (file_name == "") or (not os.path.isdir( directory )):
-                print(block)
-                return
+    def write2(self, filename, block):
+        """Write block to STDOUT or a file"""
 
-            # write to stdout if file points to a directory
-            file_path = os.path.join(directory, file_name)
+        self.blocks.append( block )
 
-            if os.path.isdir( file_path ):
-                print(block)
-                return
+        # write to stdout if no filename has been provided
+        if filename == "" or filename is None:
+            self.filenames.append( "STDOUT" )
 
-            # ensure that the directory exists
-            dir_path = os.path.dirname(file_path)
-            if not os.path.exists(dir_path):
-                os.makedirs(dir_path)
+            print( block )
+
+        # write to file
+        else:
+            if self.directory:
+                filepath = os.path.join( self.directory, filename )
+            else:
+                filepath = filename
+
+            self.filenames.append( filepath )
 
             # write block as text file
-            with codecs.open(file_path, "w", "utf-8") as text_file:
-                text_file.write(block)
+            with codecs.open(filepath, "w", "utf-8") as stream:
+                stream.write(block)
 
-        except IOError as exc:
-            snippet_len = 500
-            short_block = (block[ :snippet_len ] + "..") if len(block) > snippet_len else block
-            print( "Error while writing to file {}: \n\n=== SNIPPET START (first {} chars)=== \n{}\n===SNIPPET END===".format(file_name, snippet_len, short_block))
+    # --------------------------------------------------------------------------
+    def getDirectory(self):
+        """Provide directory"""
+        return self.directory
+
+    # --------------------------------------------------------------------------
+    def getData(self):
+        """Provide raw data"""
+        return self.data
+
+    # --------------------------------------------------------------------------
+    def getFilenames(self):
+        """Provide filenames"""
+        return self.filenames
+
+    # --------------------------------------------------------------------------
+    def getBlocks(self):
+        """Provide blocks"""
+        return self.blocks

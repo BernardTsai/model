@@ -15,14 +15,12 @@
 # - handling dependencies of elements with endpoints
 # - adding config data to actions
 
-from render import Render
-
 # ------------------------------------------------------------------------------
 #
 # Class Action
 #
 # ------------------------------------------------------------------------------
-class Action(Render):
+class Action():
 
     # --------------------------------------------------------------------------
     def __init__(self, delta):

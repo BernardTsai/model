@@ -1,7 +1,8 @@
 ---
+schema:      V0.0.1
 type:        VNF
 name:        Test
 description: A test virtualized network function
-version:     V0.1.0
+version:     V0.0.1
 vendor:      Bernard Tsai
-state:       defined2
+state:       defined

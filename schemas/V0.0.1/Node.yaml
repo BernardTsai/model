@@ -34,7 +34,7 @@ properties:
     pattern: "^V(\\d+)\\.(\\d+)\\.(\\d+)"
   component:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   placement:
     type: string
@@ -126,7 +126,7 @@ properties:
       properties:
         name:
           type: string
-        interface:
+        network:
           type: string
         endpoints:
           type: array
@@ -137,12 +137,18 @@ properties:
                 enum:
                 - TCP
                 - UDP
-              range:
-                type: string
+              port_min:
+                type: integer
+              port_max:
+                type: integer
+            required:
+            - protocol
+            - port_min
+            - port_max
       required:
-      - cluster
-      - capability
-      - interface
+      - name
+      - network
+      - endpoints
 required:
 - type
 - name

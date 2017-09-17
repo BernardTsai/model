@@ -1,10 +1,11 @@
 ---
+schema:      V0.0.1
 type:        InternalNetwork
 name:        OAM
 description: An internal test network
 vnf:         Test
 tenant:      SiteA
-version:     V0.1.0
+version:     V0.0.1
 state:       defined
 ipv4:
   cidr:      "192.168.178.0/24"

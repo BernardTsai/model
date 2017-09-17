@@ -9,7 +9,7 @@ properties:
     - VNF
   name:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   description:
     type: string
@@ -35,7 +35,7 @@ properties:
     pattern: "^V(\\d+)\\.(\\d+)\\.(\\d+)$"
   vendor:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
 required:
 - type

@@ -12,6 +12,8 @@
 #
 # ------------------------------------------------------------------------------
 
+import os
+
 from flask       import Flask, request, redirect
 from yaml        import safe_dump
 from json        import dumps
@@ -39,6 +41,59 @@ def index():
 @app.route('/version')
 def version():
     return "0.1.0"
+
+# ------------------------------------------------------------------------------
+#
+# context: list of contexts
+#
+# ------------------------------------------------------------------------------
+@app.route('/context' )
+def listContexts():
+    root_dir  = os.path.dirname(__file__)
+    data_dir  = os.path.join( root_dir, "..", "..", "data", "models" )
+
+    entries = os.listdir( data_dir )
+
+    dirs = ""
+    for entry in entries:
+        path = os.path.join( data_dir, entry )
+        if os.path.isdir( path ):
+            dirs = dirs + "\n" + entry
+
+    return dirs
+
+# ------------------------------------------------------------------------------
+#
+# context/<context>: list of versions
+#
+# ------------------------------------------------------------------------------
+@app.route('/context/<context>' )
+def listVersions(context):
+    root_dir  = os.path.dirname(__file__)
+    data_dir  = os.path.join( root_dir, "..", "..", "data", "models", context )
+
+    entries = os.listdir( data_dir )
+
+    versions = ""
+    for entry in entries:
+        versions = versions + "\n" + entry[:-5]
+
+    return versions
+
+# ------------------------------------------------------------------------------
+#
+# context/<context>/<version>: get model
+#
+# ------------------------------------------------------------------------------
+@app.route('/context/<context>/<version>' )
+def getModel(context,version):
+    root_dir  = os.path.dirname(__file__)
+    file_name = os.path.join( root_dir, "..", "..", "data", "models", context, version + ".yaml" )
+
+    with open( file_name, "r" ) as stream:
+        model = stream.read()
+
+    return model
 
 # ------------------------------------------------------------------------------
 #

@@ -1,8 +1,9 @@
 ---
+schema:      V0.0.1
 type:        ExternalNetwork
 name:        Public
 description: An external test network
-version:     V0.1.0
+version:     V0.0.1
 state:       defined
 target:      "65412:12"
 ipv4:

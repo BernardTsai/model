@@ -1,8 +1,9 @@
 ---
+schema:       V0.0.1
 type:         InternalComponent
 name:         Cluster
 description:  A test cluster within the test tenant
-version:      V0.1.0
+version:      V0.0.1
 state:        defined
 vnf:          Test
 tenant:       SiteA

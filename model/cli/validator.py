@@ -3,58 +3,48 @@
 
 # ------------------------------------------------------------------------------
 #
-#  file:    generator.py
-#  version: 1.1
-#  date:   25.01.2017
+#  file:    validator.py
+#  version: 1.0
+#  date:    15.09.2017
 #  author:  Bernard Tsai (bernard@tsai.eu)
 #  description:
-#    This script loads a VNF descriptor
-#    (special Tosca Simple Profile Format),
-#    creates an internal intermediate model
-#    and renders jinja2 templates
-#    which it then returns as output.
-# ------------------------------------------------------------------------------
-#
-# Requirements:
-#   - PyYAML (3.12)
-#   - Jinja2 (2.9.4)
-#   - tosca-parser (0.7.0) (optional with DTAG extensions )
+#    This script allows to validate change requests.
 #
 # ------------------------------------------------------------------------------
 # TODO:
-#  - routing information for components
+#  - better error handling
 # ------------------------------------------------------------------------------
 
+import os
 import argparse
 import yaml
 import sys
 
+from model.core.input    import Input
 from model.core.validate import Validate
 
 # ------------------------------------------------------------------------------
-class Validator(Validate):
+class Program():
 
     # --------------------------------------------------------------------------
-    def __init__(self, filename=None):
+    def __init__(self, change_file ):
         '''load entity from file or stdin'''
 
-        # internal model
-        self.model   = None
-        self.version = "V0.0.1"
+        # A) CONFIGURATION
+        root_dir   = os.path.dirname(__file__)
+        schema_dir = os.path.join( root_dir, "..", "..", "schemas" )
 
-        # read from file or stdin and parse yaml to model
-        if filename is not None:
-            with open(filename, 'r') as stream:
-                self.model = yaml.safe_load(stream)
-        else:
-            txt = ''
-            for line in sys.stdin:
-                txt += line
+        # B) VALIDATION PHASE
+        reader             = Input()
+        data               = reader.read( change_file )
 
-            self.model = yaml.safe_load(txt)
+        validator          = Validate( directory=schema_dir )
+        validation_results = validator.validate( data )
 
-        # validate model
-        self.messages = self.validate( self.model )
+        if validation_results:
+            for result in validation_results:
+                print( "  " + result )
+            sys.exit( -1 )
 
 # ------------------------------------------------------------------------------
 # main
@@ -62,22 +52,14 @@ class Validator(Validate):
 def main():
     # setup command line parser
     parser = argparse.ArgumentParser(
-        prog='validator.py',
-        description='Validate entity',
+        prog        = "validator.py",
+        description = "Validate change",
     )
-    parser.add_argument('-i', '--input', type=str, help='Input file (default: stdin)')
+    parser.add_argument("-i", "--input", type=str, help="Name of change descriptor file (default: STDIN)")
     args = parser.parse_args()
 
-    # validate input
-    validator = Validator( args.input )
-
-    # check messages
-    if validator.messages:
-        index = 1
-        for message in validator.messages:
-            print( "{:>4}: {}".format(index, message) )
-            index = index +1
-        sys.exit(1)
+    # execute program
+    prog = Program( args.input )
 
 # ----- MAIN -------------------------------------------------------------------
 

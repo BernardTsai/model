@@ -1,20 +1,89 @@
 ---
-model:
-  type:        Model
-  context:     test
-  version:     5
-  consistent:  False
+schema:      V0.0.1
+type:        Model
+context:     test
+version:     5
+consistent:  False
+# ------------------------------------------------------------------------------
+networks:
+- uuid:    /Public
+  type:    ExternalNetwork
+  name:    Public
+  version: V0.0.1
+  state:   defined
+  target:  65412:12
+  description: |
+    An external test network
+  ipv4:
+      cidr:      192.168.178.0/24
+      network:   192.168.178.0
+      length:    24
+      gateway:   192.168.178.1
+      dns:       192.168.178.2
+      dhcp:      192.168.178.3
+      start:     192.168.178.128
+      end:       192.168.178.253
+      broadcast: 192.168.178.254
+  ipv6:
+      cidr:      "fd00::/8"
+      network:   "fd00::"
+      length:    8
+      gateway:   "fd00::01"
+      dns:       "fd00::02"
+      dhcp:      "fd00::03"
+      start:     "fd00::80"
+      end:       "fd00::fd"
+      broadcast: "fd00::ff"
+# ------------------------------------------------------------------------------
+components:
+- uuid:         /Partner
+  type:         ExternalComponent
+  name:         Partner
+  version:      V0.0.1
+  state:        defined
+  network:      /Public
+  description: |
+    An external communication partner
+  ipv4:
+  - 0.0.0.0/0
+  ipv6:         []
+  requirements:
+  - component:  /Test/SiteA/Cluster
+    capability: ssh
+  capabilities: []
+# ------------------------------------------------------------------------------
+vnfs:
+- uuid:    /Test
+  type:    VNF
+  name:    Test
+  version: V0.0.1
+  state:   defined
+  vendor:  Bernard Tsai
+  description: |
+    A test virtualized network function
   # ----------------------------------------------------------------------------
-  networks:
-  - uuid:    /Public
-    type:    ExternalNetwork
-    name:    Public
-    version: V0.1.0
-    state:   defined
-    target:  65412:12
+  tenants:
+  - uuid:       /Test/SiteA
+    type:       Tenant
+    name:       SiteA
+    version:    V0.0.1
+    state:      defined
+    vnf:        Test
+    datacenter: SiteA
     description: |
-      An external test network
-    ipv4:
+      A test tenant of the test virtualized network function
+    # --------------------------------------------------------------------------
+    networks:
+    - uuid:    /Test/SiteA/OAM
+      type:    InternalNetwork
+      name:    OAM
+      version: V0.0.1
+      state:   defined
+      vnf:     Test
+      tenant:  SiteA
+      description: |
+        An internal test network
+      ipv4:
         cidr:      192.168.178.0/24
         network:   192.168.178.0
         length:    24
@@ -24,7 +93,7 @@ model:
         start:     192.168.178.128
         end:       192.168.178.253
         broadcast: 192.168.178.254
-    ipv6:
+      ipv6:
         cidr:      "fd00::/8"
         network:   "fd00::"
         length:    8
@@ -34,74 +103,5 @@ model:
         start:     "fd00::80"
         end:       "fd00::fd"
         broadcast: "fd00::ff"
-  # ----------------------------------------------------------------------------
-  components:
-  - uuid:         /Partner
-    type:         ExternalComponent
-    name:         Partner
-    version:      V0.1.0
-    state:        defined
-    network:      /Public
-    description: |
-      An external communication partner
-    ipv4:
-    - 0.0.0.0/0
-    ipv6:         []
-    requirements:
-    - component:  /Test-VNF/Test Tenant/Test Cluster
-      capability: ssh
-    capabilities: []
-  # ----------------------------------------------------------------------------
-  vnfs:
-  - uuid:    /Test
-    type:    VNF
-    name:    Test
-    version: V0.1.0
-    state:   defined
-    vendor:  Bernard Tsai
-    description: |
-      A test virtualized network function
     # --------------------------------------------------------------------------
-    tenants:
-    - uuid:       /Test/SiteA
-      type:       Tenant
-      name:       SiteA
-      version:    V0.1.0
-      state:      defined
-      vnf:        Test
-      datacenter: SiteA
-      description: |
-        A test tenant of the test virtualized network function
-        # ------------------------------------------------------------------------
-      networks:
-      - uuid:    /Test/SiteA/OAM
-        type:    InternalNetwork
-        name:    OAM
-        version: V0.1.0
-        state:   defined
-        vnf:     Test
-        tenant:  SiteA
-        description: |
-          An internal test network
-        ipv4:
-            cidr:      192.168.178.0/24
-            network:   192.168.178.0
-            length:    24
-            gateway:   192.168.178.1
-            dns:       192.168.178.2
-            dhcp:      192.168.178.3
-            start:     192.168.178.128
-            end:       192.168.178.253
-            broadcast: 192.168.178.254
-        ipv6:
-            cidr:      "fd00::/8"
-            network:   "fd00::"
-            length:    8
-            gateway:   "fd00::01"
-            dns:       "fd00::02"
-            dhcp:      "fd00::03"
-            start:     "fd00::80"
-            end:       "fd00::fd"
-            broadcast: "fd00::ff"
-      # ------------------------------------------------------------------------
-      components: []
+    components: []

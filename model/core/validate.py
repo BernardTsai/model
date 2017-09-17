@@ -5,7 +5,7 @@
 #
 # validate.py:
 #
-# A mixin class to provide functionality for reading data.
+# A class to provide functionality for validating data.
 #
 # ------------------------------------------------------------------------------
 
@@ -13,7 +13,6 @@ import yaml
 import glob
 import os
 import jsonschema
-import traceback
 
 # ------------------------------------------------------------------------------
 #
@@ -23,49 +22,72 @@ import traceback
 class Validate():
 
     # --------------------------------------------------------------------------
-    schemas = {}
+    def __init__(self, version="V0.0.1", directory=None):
+        """Initialize"""
+
+        if directory is None:
+            self.directory = os.path.dirname(__file__)
+        else:
+            self.directory = directory
+        self.version    = version
+        self.schemas    = {}
+        self.validators = {}
+
+        # load schemas
+        for schema_file in glob.glob( '{}/{}/*.yaml'.format( self.directory, self.version ) ):
+            schema_name = os.path.basename( schema_file )[:-5]
+            with open( schema_file, 'r' ) as stream:
+                schema    = yaml.safe_load( stream )
+                validator = jsonschema.Draft4Validator( schema )
+
+                self.schemas[schema_name]    = schema
+                self.validators[schema_name] = validator
 
     # --------------------------------------------------------------------------
     def validate(self, data):
+        """Validate data against a schema"""
         messages = []
 
-        try:
-            if not Validate.schemas:
-                # initialize class attributes
-                root_dir =  os.path.dirname(__file__)
+        # check if type has been defined
+        if not "type" in data:
+            messages.append( "Missing type" )
 
-                # load schemas
-                for schema_file in glob.glob( '{}/../../schemas/{}/*.yaml'.format( root_dir, self.version ) ):
-                    schema = os.path.basename( schema_file )[:-5]
-                    with open( schema_file, 'r' ) as stream:
-                        Validate.schemas[schema] = yaml.safe_load( stream )
+        # check type
+        elif not data["type"] in self.schemas:
+            messages.append( "Unknown type: " + data["type"] )
 
-            # check type
-            if not data["type"] in Validate.schemas:
-                messages.append( "Unknown type: " + data["type"] )
-            else:
-                # load schema
-                schema_name = data["type"]
-                schema      = Validate.schemas[ schema_name ]
+        # validate against schema
+        else:
+            # load schema
+            schema_name = data["type"]
+            validator   = self.validators[ schema_name ]
 
-                # validate
-                v = jsonschema.Draft4Validator( schema )
-                for error in v.iter_errors(data):
-                    path = ""
-                    for entry in error.absolute_path:
-                        if isinstance( entry, int ):
-                            path = path + "[" + str(entry) + "]"
-                        else:
-                            path = path + "/" + str(entry)
-                    print(error.absolute_path )
-                    print( "-" + path + "-")
-                    if path == "":
-                        path="/"
+            # validate
+            for error in validator.iter_errors(data):
+                path = ""
+                for entry in error.absolute_path:
+                    if isinstance( entry, int ):
+                        path = path + "[" + str(entry) + "]"
+                    else:
+                        path = path + "/" + str(entry)
+                if path == "":
+                    path="/"
 
-                    messages.append( path  + " <br/>")
-                    messages.append( error.message + " <br/>")
-        except Exception as e:
-            traceback.print_exc()
-            messages.append( e )
+                messages.append( path  + ": " + error.message)
 
         return messages
+
+    # --------------------------------------------------------------------------
+    def getDirectory(self):
+        """Provide directory"""
+        return self.directory
+
+    # --------------------------------------------------------------------------
+    def getVersion(self):
+        """Provide version"""
+        return self.version
+
+    # --------------------------------------------------------------------------
+    def getSchemas(self):
+        """Provide schemas"""
+        return self.schemas

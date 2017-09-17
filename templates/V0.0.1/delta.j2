@@ -1,0 +1,83 @@
+---
+schema:      {{schema}}
+type:        Delta-Model
+context:     {{context}}
+version1:    {{version1}}
+version2:    {{version2}}
+# ------------------------------------------------------------------------------
+{% if (networks is defined) and networks %}
+networks:
+{% else %}
+networks: []
+{% endif %}
+{% for network in networks %}
+- uuid:    {{network.uuid}}
+  type:    ExternalNetwork
+  action:  {{network.action}}
+{% endfor %}{# networks #}
+# ------------------------------------------------------------------------------
+{% if (components is defined) and components %}
+components:
+{% else %}
+components: []
+{% endif %}
+{% for component in components %}
+- uuid:    {{component.uuid}}
+  type:    ExternalComponent
+  action:  {{component.action}}
+{% endfor %}{# components #}
+# ------------------------------------------------------------------------------
+{% if (vnfs is defined) and vnfs %}
+vnfs:
+{% else %}
+vnfs: []
+{% endif %}
+{% for vnf in vnfs %}
+- uuid:    {{vnf.uuid}}
+  type:    VNF
+  action:  {{vnf.action}}
+  # ----------------------------------------------------------------------------
+{% if (vnf.tenants is defined) and vnf.tenants %}
+  tenants:
+{% else %}
+  tenants: []
+{% endif %}
+{% for tenant in vnf.tenants %}
+  - uuid:    {{tenant.uuid}}
+    type:    Tenant
+    action:  {{tenant.action}}
+    # --------------------------------------------------------------------------
+{% if (tenant.networks is defined) and tenant.networks %}
+    networks:
+{% else %}
+    networks: []
+{% endif %}
+{% for network in tenant.networks %}
+    - uuid:    {{network.uuid}}
+      type:    InternalNetwork
+      action:  {{network.action}}
+{% endfor %}{# networks #}
+    # --------------------------------------------------------------------------
+{% if (tenant.components is defined) and tenant.components %}
+    components:
+{% else %}
+    components: []
+{% endif %}
+{% for component in tenant.components %}
+    - uuid:    {{component.uuid}}
+      type:    InternalComponent
+      action:  {{component.action}}
+      # ------------------------------------------------------------------------
+{% if (component.nodes is defined) and component.nodes %}
+      nodes:
+{% else %}
+      nodes: []
+{% endif %}
+{% for node in component.nodes %}
+      - uuid:    {{node.uuid}}
+        type:    Node
+        action:  {{node.action}}
+{% endfor %}{# nodes #}
+{% endfor %}{# components #}
+{% endfor %}{# tenants #}
+{% endfor %}{# vnfs #}

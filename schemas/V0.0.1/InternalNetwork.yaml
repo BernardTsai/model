@@ -9,7 +9,7 @@ properties:
     - InternalNetwork
   name:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   description:
     type: string
@@ -35,11 +35,11 @@ properties:
     pattern: "^V(\\d+)\\.(\\d+)\\.(\\d+)$"
   vnf:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   tenant:
     type: string
-    minLength: 4
+    minLength: 3
     maxLength: 256
   ipv4:
     type: object
